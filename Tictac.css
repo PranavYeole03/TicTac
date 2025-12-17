@@ -1,6 +1,7 @@
+/* Reset */
 * {
-  padding: 0;
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -10,6 +11,8 @@ body {
   text-align: center;
 
   min-height: 100vh;
+  padding: 12px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,18 +23,22 @@ body {
 /* Title */
 h1 {
   margin-top: 1rem;
+  margin-bottom: 0.5rem;
   color: #394aac;
   font-family: fantasy;
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
 }
 
 /* Message */
+.msg-container {
+  margin-bottom: 12px;
+}
+
 #msg {
-  font-family: 'Times New Roman';
-  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-family: "Times New Roman", serif;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
   font-weight: 700;
   color: #5a41ca;
-  margin-top: 0.8rem;
 }
 
 /* Board container */
@@ -42,44 +49,57 @@ h1 {
   align-items: center;
 }
 
-/* Game grid */
+/* Game grid – PERFECT 3x3 */
 .game {
-  height: 60vmin;
-  width: 60vmin;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+
+  width: min(90vw, 360px);
+  height: min(90vw, 360px);
 }
 
 /* Boxes */
 .box {
-  height: 18vmin;
-  width: 18vmin;
+  width: 100%;
+  height: 100%;
+
   border: 1px solid #9a05f06c;
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: 0px 0px 10px #c98a2c;
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  font-weight: 700;
+
   background-color: #cdd021;
   color: #51057d;
+
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 700;
+
   cursor: pointer;
+  touch-action: manipulation;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .box:hover {
   transform: scale(1.05);
+  background-color: #d8db2a;
 }
 
 /* Restart button */
 #restart {
-  margin-bottom: 1rem;
+  margin: 18px 0 10px;
+  padding: 0.7rem 2rem;
+
   background-color: yellow;
   color: rgba(0, 0, 0, 0.7);
+
   border: none;
   border-radius: 24px;
-  padding: 0.8rem 2rem;   /* FIXED */
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -87,7 +107,7 @@ h1 {
   background-color: #ffd000;
 }
 
-/* Blink animation */
+/* Blink animation (win message) */
 .blink {
   animation: blinkAnimation 0.7s infinite;
   font-weight: bold;
@@ -98,4 +118,12 @@ h1 {
   0% { opacity: 1; }
   50% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+/* Extra small phones */
+@media (max-width: 400px) {
+  #restart {
+    font-size: 18px;
+    padding: 0.6rem 1.6rem;
+  }
 }
