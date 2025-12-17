@@ -1,65 +1,81 @@
-let boxes = document.querySelectorAll(".box");
-const restart = document.getElementById('restart');
-let turn = true;
+const boxes = document.querySelectorAll(".box");
+const restart = document.getElementById("restart");
+const msg = document.getElementById("msg");
+
+let turnX = true;
+let gameOver = false;
 
 const winnerPattern = [
-    [0, 1, 2],
-    [0, 3, 6],
-    [0, 4, 8],
-    [1, 4, 7],
-    [2, 5, 8],
-    [2, 4, 6],
-    [3, 4, 5],
-    [6, 7, 8],
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
 ];
 
+// Handle box click
 boxes.forEach((box) => {
-    box.addEventListener('click', () => {
-        if (turn) {
-            box.innerText = "X";
-            box.style.backgroundColor = "#7fffd4";
-            turn = false;
-        } else {
-            box.innerText = "O";
-            box.style.backgroundColor = "#a3f305ff";
-            turn = true;
-        }
-        box.disabled = true;
-        checkWinner();
-    });
+  box.addEventListener("click", () => {
+    if (box.innerText !== "" || gameOver) return;
+
+    box.innerText = turnX ? "X" : "O";
+    box.style.backgroundColor = turnX ? "#7fffd4" : "#a3f305ff";
+    turnX = !turnX;
+
+    checkWinner();
+  });
 });
 
-const checkWinner = () => {
-    for (let pattern of winnerPattern) {
-        let posval1 = boxes[pattern[0]].innerText;
-        let posval2 = boxes[pattern[1]].innerText;
-        let posval3 = boxes[pattern[2]].innerText;
+// Check winner or draw
+function checkWinner() {
+  for (let pattern of winnerPattern) {
+    const [a, b, c] = pattern;
 
-        if (posval1 !== "" && posval2 !== "" && posval3 !== "") {
-            if (posval1 === posval2 && posval2 === posval3) {
-                document.getElementById("msg").innerHTML =
-                    `<span class="blink">🎉Congratulations! ${posval1} Player Wins</span>`;
-
-                boxes.forEach((box) => {
-                    box.disabled = true;
-                    if (box.innerText === "") {
-                        box.style.backgroundColor = "#ca6d15ff";
-                    }
-                });
-                return;
-            }
-        }
+    if (
+      boxes[a].innerText &&
+      boxes[a].innerText === boxes[b].innerText &&
+      boxes[a].innerText === boxes[c].innerText
+    ) {
+      showWinner(boxes[a].innerText);
+      return;
     }
-};
+  }
 
+  // Draw check
+  const isDraw = [...boxes].every((box) => box.innerText !== "");
+  if (isDraw) {
+    msg.innerHTML = `<span class="blink">🤝 Match Draw</span>`;
+    gameOver = true;
+  }
+}
+
+// Display winner
+function showWinner(winner) {
+  msg.innerHTML = `<span class="blink">🎉 Congratulations! ${winner} Wins</span>`;
+  gameOver = true;
+
+  boxes.forEach((box) => {
+    box.disabled = true;
+    if (box.innerText === "") {
+      box.style.backgroundColor = "#ca6d15ff";
+    }
+  });
+}
+
+// Restart game
 restart.addEventListener("click", () => {
-    boxes.forEach((box) => {
-        box.innerText = "";
-        box.disabled = false;
-        box.style.backgroundColor = "#51057d";
-    });
-    turn = true;
+  boxes.forEach((box) => {
+    box.innerText = "";
+    box.disabled = false;
+    box.style.backgroundColor = "#cdd021"; // match CSS
+  });
 
-    const msgElement = document.getElementById("msg");
-    msgElement.innerHTML = "Let's Play The Game";
+  msg.classList.remove("blink");
+  msg.innerText = "Let's Play the Game";
+
+  turnX = true;
+  gameOver = false;
 });
